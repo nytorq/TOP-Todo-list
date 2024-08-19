@@ -18,7 +18,7 @@ const buttonCreator = (value, className) => {
     return button;
 }
 
-const fieldCreator = (type, labelText, connection) => {
+const fieldCreator = (type, labelText, connection, className) => {
     const label = document.createElement('label');
     label.innerText = labelText;
     label.setAttribute('for', connection);
@@ -27,6 +27,9 @@ const fieldCreator = (type, labelText, connection) => {
     field.id = connection;
     field.name = connection;
     label.appendChild(field)
+    if (className) {
+        label.className.add(`'${className}'`)
+    }
     return label;
 }
 

@@ -37,29 +37,55 @@ class Task {
         this.desc = description;
         this.dueDate = date
     }
+    id = idCreator();
 };
+
+// Creating basic data structure
 const user1 = new User();
 const project1 = new Project();
 user1.addProject(project1);
+let idCounter = 0;
+
+// Utility functions
+
+const idCreator = () => {
+    let currentID = idCounter;
+    idCounter += 1;
+    return currentID;
+}
 
 
-const newTask = buttonCreator('New Task', 'testClass')
+
+// General page elements
+const newTaskButton = buttonCreator('Create Task', 'testClass')
 const body = document.querySelector('body');
+const header = textCreator('h1', 'MasterTasker');
+body.appendChild(header);
 
+
+// Creating form for creating new tasks
+const newTaskForm = document.createElement('form');
+const formHeader = textCreator('h2', 'Home');
+newTaskForm.appendChild(formHeader);
+body.appendChild(newTaskForm);
 const taskTitle = fieldCreator('input','Task', 'taskTitle');
-body.append(taskTitle);
+newTaskForm.append(taskTitle);
 const taskDescription = fieldCreator('input','Description', 'taskDescription');
-body.append(taskDescription);
+newTaskForm.append(taskDescription);
 const taskDueDate = fieldCreator('date','Due Date', 'taskDueDate');
-body.append(taskDueDate);
-body.appendChild(newTask);
-newTask.addEventListener('click', ()=>{
+newTaskForm.append(taskDueDate);
+newTaskForm.appendChild(newTaskButton);
+newTaskButton.addEventListener('click', ()=>{
+    event.preventDefault();
     let taskName = document.getElementById('taskTitle');
     let taskDesc = document.getElementById('taskDescription');
     let taskDueDate = document.getElementById('taskDueDate');
-    let newField = fieldCreator('checkbox', taskName.value, 'newTask');
-    body.appendChild(newField)
     const newTask = new Task(taskName.value, taskDesc.value, taskDueDate.value );
+    let newField = fieldCreator('checkbox', taskName.value, `task-${newTask.id}`);
+    newTaskForm.insertBefore(newField, taskTitle)
     project1.addTask(newTask);
     console.dir(user1);
+    taskName.value = '';
+    taskDesc.value = '';
+    taskDueDate.value = '';
 });
