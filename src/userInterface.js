@@ -1,17 +1,6 @@
 import {textCreator, imageCreator, buttonCreator, fieldCreator, idCounter, idCreator} from "./tools.js";
 import {User, Project, Task, currentUser, project1, addTaskObject} from "./logic.js"
 
-const populateSelect = (select, options) => {
-    select.innerHTML = '';
-
-    options.forEach( option  => {
-        const optionElement = document.createElement('option');
-        optionElement.innerText = option;
-        optionElement.value = option;
-        select.appendChild(optionElement);
-    });
-}
-
 const renderUI = function() {
     // General page elements
     const newTaskButton = buttonCreator('Create Task', 'testClass')
@@ -36,32 +25,36 @@ const renderUI = function() {
     newTaskForm.appendChild(taskDescription);
     const taskDueDate = fieldCreator('date','Due Date', 'taskDueDate');
     newTaskForm.appendChild(taskDueDate);
-    const taskPriorityLabel = document.createElement('label');
-    taskPriorityLabel.innerText = "Priority";
-    const taskPriority = document.createElement('select');
-    populateSelect(taskPriority, Task.validPriorities);
-    taskPriorityLabel.appendChild(taskPriority);
-    newTaskForm.appendChild(taskPriorityLabel);
-    newTaskForm.appendChild(newTaskButton);
+
+    // Creating a select for task priority
+    // const taskPriorityLabel = document.createElement('label');
+    // taskPriorityLabel.innerText = "Priority";
+    // const taskPriority = document.createElement('select');
+    // populateSelect(taskPriority, Task.validPriorities);
+    // taskPriorityLabel.appendChild(taskPriority);
+    // newTaskForm.appendChild(taskPriorityLabel);
+    // newTaskForm.appendChild(newTaskButton);
         
     // Adding functionality to "Create Task" button
-    newTaskButton.addEventListener('click', ()=>{
+    newTaskButton.addEventListener('click', (event)=>{
         event.preventDefault();
-        let taskName = document.getElementById('taskTitle');
-        let taskDesc = document.getElementById('taskDescription');
-        let taskDueDate = document.getElementById('taskDueDate');
+        // let taskName = document.getElementById('taskTitle');
+        // let taskDesc = document.getElementById('taskDescription');
+        // let taskDueDate = document.getElementById('taskDueDate');
         
         // Creating new Task object and adding it to project
-        let taskObject = addTaskObject(taskName.value, taskDesc.value, taskDueDate.value, taskPriority.value);
+        console.log(taskTitle);
+        console.log(taskTitle.value);
+        let taskObject = addTaskObject(taskTitle.value, taskDescription.value, taskDueDate.value, taskPriority.value);
         
 
         // Creating new task in the UI
-        let newField = fieldCreator('checkbox', taskName.value, `task-${taskObject.id}`);
-        tasks.appendChild(newField)
+        let newCheckbox = fieldCreator('checkbox', taskTitle.value, `task-${taskObject.id}`);
+        tasks.appendChild(newCheckbox)
 
         // Clearing out inputs
-        taskName.value = '';
-        taskDesc.value = '';
+        taskTitle.value = '';
+        taskDescription.value = '';
         taskDueDate.value = '';
 
         console.log(currentUser);

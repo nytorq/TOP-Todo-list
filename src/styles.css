@@ -38,6 +38,8 @@ input, select {
     font-size: 1rem;
     padding: 8px;
     border-radius: calc(var(--br-1)/2);
+    width: 100%;
+    box-sizing: border-box;
 }
 
 label {
@@ -61,10 +63,6 @@ h1 {
 form {
     display: flex;
     flex-direction: column;
-}
-
-form > * {
-    width: 100%;
 }
 
 form > h2 {

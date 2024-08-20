@@ -1,3 +1,5 @@
+import {User, Project, Task, currentUser, project1, addTaskObject} from "./logic.js"
+
 const textCreator = (type, string) => {
     const element = document.createElement(`${type}`);
     element.innerText = string;
@@ -19,6 +21,32 @@ const buttonCreator = (value, className) => {
 }
 
 const fieldCreator = (type, labelText, connection, className) => {
+
+    const populateSelect = (select, options) => {
+        select.innerHTML = '';
+    
+        options.forEach( option  => {
+            const optionElement = document.createElement('option');
+            optionElement.innerText = option;
+            optionElement.value = option;
+            select.appendChild(optionElement);
+        });
+    }
+
+    if (type = 'select') {
+        const div = document.createElement('div');
+        div.classList.add('field');
+        const label = document.createElement('label');
+        label.innerText = labelText;
+        const select = document.createElement('select');
+        populateSelect(select, Task.validPriorities);
+        taskPriorityLabel.appendChild(taskPriority);
+        newTaskForm.appendChild(taskPriorityLabel);
+        newTaskForm.appendChild(newTaskButton);
+    }
+
+    const div = document.createElement('div');
+    div.classList.add('field');
     const label = document.createElement('label');
     label.innerText = labelText;
     label.setAttribute('for', connection);
@@ -26,11 +54,13 @@ const fieldCreator = (type, labelText, connection, className) => {
     field.type = type;
     field.id = connection;
     field.name = connection;
-    label.appendChild(field)
     if (className) {
-        label.className.add(`'${className}'`)
+        label.className.add(`'${className}'`);
+        field.className.add(`'${className}'`);
     }
-    return label;
+    div.appendChild(label)
+    div.appendChild(field)
+    return div;
 }
 
 let idCounter = 0;
