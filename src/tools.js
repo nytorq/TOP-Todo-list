@@ -33,4 +33,12 @@ const fieldCreator = (type, labelText, connection, className) => {
     return label;
 }
 
-export {textCreator, imageCreator, buttonCreator, fieldCreator}
+let idCounter = 0;
+
+const idCreator = () => {
+    let currentID = idCounter;
+    idCounter += 1;
+    return currentID;
+}
+
+export {textCreator, imageCreator, buttonCreator, fieldCreator, idCounter, idCreator}

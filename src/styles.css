@@ -31,7 +31,7 @@ button {
     width: 100%;
 }
 
-input {
+input, select {
     background-color: transparent;
     border: 1px solid var(--color-sec);
     color: var(--color-type-pri);
@@ -46,7 +46,7 @@ label {
     flex-direction: column;
 }
 
-form {
+.tasklist {
     background-color: white;
     border: 1px solid var(--color-pri);
     padding: 16px;
@@ -56,6 +56,15 @@ form {
 
 h1 {
     color: var(--color-type-pri)
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+form > * {
+    width: 100%;
 }
 
 form > h2 {
