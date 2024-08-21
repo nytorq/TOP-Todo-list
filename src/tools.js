@@ -22,6 +22,8 @@ const buttonCreator = (value, className) => {
 
 const fieldCreator = (type, labelText, connection, className) => {
 
+    let field;
+
     const populateSelect = (select, options) => {
         select.innerHTML = '';
     
@@ -33,27 +35,23 @@ const fieldCreator = (type, labelText, connection, className) => {
         });
     }
 
-    if (type = 'select') {
-        const div = document.createElement('div');
-        div.classList.add('field');
-        const label = document.createElement('label');
-        label.innerText = labelText;
-        const select = document.createElement('select');
-        populateSelect(select, Task.validPriorities);
-        taskPriorityLabel.appendChild(taskPriority);
-        newTaskForm.appendChild(taskPriorityLabel);
-        newTaskForm.appendChild(newTaskButton);
-    }
-
     const div = document.createElement('div');
     div.classList.add('field');
     const label = document.createElement('label');
     label.innerText = labelText;
     label.setAttribute('for', connection);
-    const field = document.createElement('input');
-    field.type = type;
-    field.id = connection;
-    field.name = connection;
+
+    if (type === 'select') {
+        field = document.createElement('select');
+        field.id = 'taskPriority';
+        populateSelect(field, Task.validPriorities);
+    } else {
+        field = document.createElement('input');
+        field.type = type;
+        field.id = connection;
+        field.name = connection;
+    }
+    
     if (className) {
         label.className.add(`'${className}'`);
         field.className.add(`'${className}'`);

@@ -2,14 +2,13 @@ import {textCreator, imageCreator, buttonCreator, fieldCreator, idCounter, idCre
 import {User, Project, Task, currentUser, project1, addTaskObject} from "./logic.js"
 
 const renderUI = function() {
-    // General page elements
-    const newTaskButton = buttonCreator('Create Task', 'testClass')
     const body = document.querySelector('body');
     const header = textCreator('h1', 'Personal Projects');
     body.appendChild(header);
 
-    // Creating form for creating new tasks
-    const newTaskForm = document.createElement('form');
+    // Creating form and its fields for creating new tasks
+    const newTaskButton = buttonCreator('Create Task', 'testClass')
+    
     const formHeader = textCreator('h2', 'Home');
     const tasklist = document.createElement('div');
     tasklist.classList.add('tasklist');
@@ -18,39 +17,67 @@ const renderUI = function() {
     tasks.classList.add('tasks');
     tasklist.appendChild(formHeader);
     tasklist.appendChild(tasks);
-    tasklist.appendChild(newTaskForm);
+    const newTaskForm = document.createElement('form');
     const taskTitle = fieldCreator('input','Task', 'taskTitle');
     newTaskForm.appendChild(taskTitle);
     const taskDescription = fieldCreator('input','Description', 'taskDescription');
     newTaskForm.appendChild(taskDescription);
     const taskDueDate = fieldCreator('date','Due Date', 'taskDueDate');
     newTaskForm.appendChild(taskDueDate);
+    const taskPriority = fieldCreator('select', 'Priority', 'taskPriority');
+    newTaskForm.appendChild(taskPriority);
+    newTaskForm.appendChild(newTaskButton);
+    tasklist.appendChild(newTaskForm);
 
-    // Creating a select for task priority
-    // const taskPriorityLabel = document.createElement('label');
-    // taskPriorityLabel.innerText = "Priority";
-    // const taskPriority = document.createElement('select');
-    // populateSelect(taskPriority, Task.validPriorities);
-    // taskPriorityLabel.appendChild(taskPriority);
-    // newTaskForm.appendChild(taskPriorityLabel);
-    // newTaskForm.appendChild(newTaskButton);
-        
+    // Create new task form
+    const taskDetailsCreator = function() {
+        const taskInput = fieldCreator('input','Task', 'taskTitle');
+        taskDetails.appendChild(taskInput);
+        taskInput.value = taskTitle.value
+        const DescInput = fieldCreator('input','Description', 'taskDescription');
+        taskDetails.appendChild(DescInput);
+        taslDescription.value = DescInput.value
+        const dueDatePicker = fieldCreator('date','Due Date', 'taskDueDate');
+        taskDetails.appendChild(taskDueDate);
+        const taskPriority = fieldCreator('select', 'Priority', 'taskPriority');
+        taskDetails.appendChild(taskPriority);
+    }
+
+
     // Adding functionality to "Create Task" button
-    newTaskButton.addEventListener('click', (event)=>{
+    const createTask = function(event) {
         event.preventDefault();
-        // let taskName = document.getElementById('taskTitle');
-        // let taskDesc = document.getElementById('taskDescription');
-        // let taskDueDate = document.getElementById('taskDueDate');
+        let taskTitle = document.getElementById('taskTitle');
+        let taskDescription = document.getElementById('taskDescription');
+        let taskDueDate = document.getElementById('taskDueDate');
+        let taskPriority = document.getElementById('taskPriority');
         
         // Creating new Task object and adding it to project
-        console.log(taskTitle);
-        console.log(taskTitle.value);
-        let taskObject = addTaskObject(taskTitle.value, taskDescription.value, taskDueDate.value, taskPriority.value);
+        addTaskObject(taskTitle.value, taskDescription.value, taskDueDate.value, taskPriority.value);
         
 
         // Creating new task in the UI
-        let newCheckbox = fieldCreator('checkbox', taskTitle.value, `task-${taskObject.id}`);
-        tasks.appendChild(newCheckbox)
+        const container = document.createElement('div');
+        container.classList.add('taskContainer');
+        const taskDetails = document.createElement('div');
+        taskDetails.classList.add('taskDetails');
+
+        
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        const moreButton = document.createElement('span');
+        moreButton.classList.add('material-symbols-outlined');
+        moreButton.innerText = "more_horiz";
+        container.appendChild(checkbox);
+        container.appendChild(taskDetails);
+        container.appendChild(moreButton);
+
+        tasks.appendChild(container);
+        
+        // Original task row creator
+        // let newCheckbox = fieldCreator('checkbox', taskTitle.value, `task-${taskObject.id}`);
+        // tasks.appendChild(newCheckbox)
 
         // Clearing out inputs
         taskTitle.value = '';
@@ -58,8 +85,11 @@ const renderUI = function() {
         taskDueDate.value = '';
 
         console.log(currentUser);
-    });
+        console.log(taskTitle.value);
+    }
+    newTaskButton.addEventListener('click', createTask);
 };
+
 
 
 

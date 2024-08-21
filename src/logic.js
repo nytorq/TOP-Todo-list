@@ -17,7 +17,7 @@ class Project {
 };
 class Task {
     static validPriorities = ["Low", "Medium", "High"];
-    constructor(title, description, date, priority = 'medium') {
+    constructor(title, description, date, priority = 'Medium') {
         this.title = title;
         this.desc = description;
         this.dueDate = date
