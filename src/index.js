@@ -3,11 +3,11 @@ import {renderUI} from "./userInterface.js";
 
 /* CHECKLIST OF FUNCTIONALITY
     [X] UI and data handing are separated
-    [ ] Tasks should have the following:
-        [ ] title
-        [ ] description
-        [ ] due date
-        [ ] priority
+    [X] Tasks should have the following:
+        [X] title
+        [X] description
+        [X] due date
+        [X] priority
     [ ] Edit a task
     [ ] Delete a task
     [ ] Tasks should be bundled into separate projects
