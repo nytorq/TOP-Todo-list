@@ -1,4 +1,7 @@
 import {textCreator, imageCreator, buttonCreator, fieldCreator, idCounter, idCreator} from "./tools.js";
+let currentUser;
+let project1;
+
 // Classes
 class User {
     projects = [];
@@ -32,17 +35,37 @@ class Task {
     id = idCreator();
 };
 
+const addTaskObject = function(title, description, date, priority) {
+    const taskObject = new Task(title, description, date, priority);
+    currentUser.projects[0].taskObject;
+    updateLocalStorage(currentUser);
+    return taskObject;
+}
+
+const updateLocalStorage = function(object) {
+    const JSONString = JSON.stringify(object);
+    localStorage.setItem('currentUser', JSONString);
+}
+
 // Creating basic data structure
-const currentUser = new User();
-const project1 = new Project();
-currentUser.addProject(project1);
+
+
+const populateData = function() {
+    if (localStorage.currentUser) {
+        let JSONString = localStorage.getItem('currentUser');
+        currentUser = JSON.parse(JSONString);
+    } else {
+        currentUser = new User();
+        project1 = new Project();
+        currentUser.addProject(project1);
+        updateLocalStorage(currentUser)
+    }
+}
+
+populateData();
 
 // Data creation functions
 
-const addTaskObject = function(title, description, date, priority) {
-    const taskObject = new Task(title, description, date, priority);
-    project1.addTask(taskObject);
-    return taskObject;
-}
+
 
 export {User, Project, Task, currentUser, project1, addTaskObject}
