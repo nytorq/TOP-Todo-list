@@ -43,7 +43,7 @@ const fieldCreator = (type, labelText, connection, className) => {
 
     if (type === 'select') {
         field = document.createElement('select');
-        field.id = 'taskPriority';
+        field.id = connection;
         populateSelect(field, Task.validPriorities);
     } else {
         field = document.createElement('input');

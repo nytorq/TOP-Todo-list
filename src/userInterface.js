@@ -39,7 +39,17 @@ const renderUI = function() {
     tasklist.appendChild(formHeader);
     tasklist.appendChild(tasks);
     const newTaskForm = document.createElement('form');
-    taskDetailsCreator(newTaskForm);
+
+    // Creating form's task inputs
+    const taskTitleField = fieldCreator('input','Task', 'taskTitle-main');
+    newTaskForm.appendChild(taskTitleField);
+    const taskDescField = fieldCreator('input','Description', 'taskDescription-main');
+    newTaskForm.appendChild(taskDescField);
+    const taskDueDateField = fieldCreator('date','Due Date', 'taskDueDate-main');
+    newTaskForm.appendChild(taskDueDateField);
+    const taskPriorityField = fieldCreator('select', 'Priority', 'taskPriority-main');
+    newTaskForm.appendChild(taskPriorityField);
+
     newTaskForm.appendChild(newTaskButton);
     tasklist.appendChild(newTaskForm);
 
@@ -50,10 +60,10 @@ const renderUI = function() {
     // Adding functionality to "Create Task" button
     const createTask = function(event) {
         event.preventDefault();
-        let taskTitle = document.getElementById('taskTitle');
-        let taskDescription = document.getElementById('taskDescription');
-        let taskDueDate = document.getElementById('taskDueDate');
-        let taskPriority = document.getElementById('taskPriority');
+        let taskTitle = document.getElementById('taskTitle-main');
+        let taskDescription = document.getElementById('taskDescription-main');
+        let taskDueDate = document.getElementById('taskDueDate-main');
+        let taskPriority = document.getElementById('taskPriority-main');
 
         // Creating new Task object and adding it to project
         let taskData = addTaskObject(taskTitle.value, taskDescription.value, taskDueDate.value, taskPriority.value);
@@ -73,7 +83,7 @@ const renderUI = function() {
         container.appendChild(taskDetails);
         container.appendChild(moreButton);
         tasks.appendChild(container);
-        console.dir(currentUser.projects[0].tasks[0])
+        // console.dir(currentUser.projects[0].tasks[0])
         
         // Clearing out inputs
         taskTitle.value = '';

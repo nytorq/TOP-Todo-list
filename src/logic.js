@@ -36,36 +36,80 @@ class Task {
 };
 
 const addTaskObject = function(title, description, date, priority) {
-    const taskObject = new Task(title, description, date, priority);
-    currentUser.projects[0].taskObject;
-    updateLocalStorage(currentUser);
+    let taskObject = new Task(title, description, date, priority);
+    let appData = loadFromLocalStorage();
+    appData.projects[0].tasks.push(taskObject);
+    saveToLocalStorage(appData);
+    console.log(localStorage.appData);
     return taskObject;
 }
 
-const updateLocalStorage = function(object) {
-    const JSONString = JSON.stringify(object);
-    localStorage.setItem('currentUser', JSONString);
-}
+// const updateLocalStorage = function(object) {
+//     const JSONString = JSON.stringify(object);
+//     localStorage.setItem('currentUser', JSONString);
+// }
 
-// Creating basic data structure
+// // Creating basic data structure
 
 
-const populateData = function() {
-    if (localStorage.currentUser) {
-        let JSONString = localStorage.getItem('currentUser');
-        currentUser = JSON.parse(JSONString);
-    } else {
-        currentUser = new User();
-        project1 = new Project();
-        currentUser.addProject(project1);
-        updateLocalStorage(currentUser)
-    }
-}
+// const updateAppData = function() {
+//     if (localStorage.currentUser) {
+//         let JSONString = localStorage.getItem('currentUser');
+//         currentUser = JSON.parse(JSONString);
+//     } else {
+//         currentUser = new User();
+//         project1 = new Project();
+//         currentUser.addProject(project1);
+//         updateLocalStorage(currentUser)
+//     }
+// }
 
-populateData();
+// updateAppData();
 
 // Data creation functions
 
 
+const storageKey = 'appData';
 
-export {User, Project, Task, currentUser, project1, addTaskObject}
+const saveToLocalStorage = function(object) {
+    try {
+        let JSONString = JSON.stringify(object)
+        localStorage.setItem(storageKey, JSONString);
+    } catch {
+        throw new Error('Could not save to localStorage.');
+    }
+}
+
+const loadFromLocalStorage = function() {
+    let appData;
+    if (localStorage.appData) {
+        let stringyAppData = localStorage.appData;
+        appData = JSON.parse(stringyAppData);
+        return appData;
+    } else {
+        let newUser = new User();
+        let newProject = new Project();
+        newUser.addProject(newProject);
+        saveToLocalStorage(newUser);
+    }
+}
+
+
+loadFromLocalStorage();
+
+window.loadFromLocalStorage = loadFromLocalStorage;
+
+/* 
+1. See if there's appData to pull from
+    1. If there isn't, go ahead and create a new User and a Project. Then run saveToLocalStorage.
+    2. If there is, loadFromLocalStorage. Then populate you app with appData
+
+2. Adding a task
+    1. Perform loadFromLocalStorage
+    2. Navigate down to curren project
+    3. Add new task to tasks array
+    4. Run STLS
+*/ 
+
+
+export {User, Project, Task, currentUser, project1, addTaskObject, loadFromLocalStorage}
