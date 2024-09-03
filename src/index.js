@@ -16,5 +16,3 @@ import {renderUI} from "./userInterface.js";
     [ ] Stores everything in localStorage
     [ ] No crashing if there's nothing in localStorage
 */ 
-
-renderUI();

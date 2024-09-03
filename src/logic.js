@@ -98,6 +98,7 @@ const loadFromLocalStorage = function() {
 loadFromLocalStorage();
 
 window.loadFromLocalStorage = loadFromLocalStorage;
+// window.addTaskObject = addTaskObject;
 
 /* 
 1. See if there's appData to pull from
