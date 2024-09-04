@@ -1,15 +1,12 @@
-import {textCreator, imageCreator, buttonCreator, fieldCreator, idCounter, idCreator} from "./tools.js";
-
-let currentUser;
-let project1;
+import {idCreator} from "./tools.js";
 
 // Classes
-class User {
-    projects = [];
-    addProject(project) {
-        this.projects.push(project);
-    }
-}
+// class User {
+//     projects = [];
+//     addProject(project) {
+//         this.projects.push(project);
+//     }
+// }
 class Project {
     constructor(name) {
         this.name = name;
@@ -36,8 +33,30 @@ class Task {
     id = idCreator();
 };
 
-const addTaskObject = function(title, description, date, priority) {
-    let taskObject = new Task(title, description, date, priority);
+const storageKey = 'appData';
+
+/*
+ - Create new X
+ - Retrieve appData. Convert from string to object
+ - Insert X into its respective place
+ - Stringify object
+ - Save into localStorage
+*/
+
+
+const addProject = function(projectName) {
+    let newProject = new Project(projectName);
+    let parsedAppData = loadFromLocalStorage();
+    console.log('parsedAppData is ' + parsedAppData);
+    if (!parsedAppData.projects) {
+        parsedAppData.projects = [];
+    }
+    parsedAppData.projects.push(newProject);
+    saveToLocalStorage(parsedAppData)
+}
+
+const addTaskObject = function(project, title, description, date, priority) {
+    let taskObject = new Task(project, title, description, date, priority);
     let appData = loadFromLocalStorage();
     appData.projects[0].tasks.push(taskObject);
     saveToLocalStorage(appData);
@@ -70,8 +89,6 @@ const addTaskObject = function(title, description, date, priority) {
 // Data creation functions
 
 
-const storageKey = 'appData';
-
 const saveToLocalStorage = function(object) {
     try {
         let JSONString = JSON.stringify(object)
@@ -82,37 +99,29 @@ const saveToLocalStorage = function(object) {
 }
 
 const loadFromLocalStorage = function() {
-    let appData;
     if (localStorage.appData) {
-        let stringyAppData = localStorage.appData;
-        appData = JSON.parse(stringyAppData);
-        return appData;
-    } else {
-        let newUser = new User();
-        let newProject = new Project();
-        newUser.addProject(newProject);
-        saveToLocalStorage(newUser);
+        let parsedAppData = JSON.parse(localStorage.appData)
+        return parsedAppData;
+    } else if (!localStorage.appData) {
+        saveToLocalStorage(createAppData())
+        let parsedAppData = JSON.parse(localStorage.appData)
+        return parsedAppData;
     }
+
 }
 
-
-loadFromLocalStorage();
-
-const view = () => {
-    let stringyAppData = localStorage.appData;
-    let appData = JSON.parse(stringyAppData);
-    console.dir(appData);
+const createAppData = function() {
+    let blankObject = {
+        projects: []
+    };
+    return blankObject;
 }
 
-const clear = function() {
-    localStorage.clear();
-    console.log(`%clocalStorage has been cleared`, `color: blue;`)
-}
 
 window.loadFromLocalStorage = loadFromLocalStorage;
 window.addTaskObject = addTaskObject;
-window.clear = clear;
-window.view = view;
+window.addProject = addProject;
+window.createAppData = createAppData;
 
 /* 
 1. See if there's appData to pull from
@@ -127,5 +136,4 @@ window.view = view;
 */ 
 
 
-
-export {User, Project, Task, currentUser, project1, addTaskObject, loadFromLocalStorage}
+export {Project, Task, addTaskObject, loadFromLocalStorage}
