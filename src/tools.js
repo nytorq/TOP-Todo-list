@@ -64,9 +64,14 @@ const fieldCreator = (type, labelText, connection, className) => {
 let idCounter = 0;
 
 const idCreator = () => {
-    let currentID = idCounter;
-    idCounter += 1;
-    return currentID;
+    if (idCounter === 0) {
+        idCounter += 1;
+        return 0;
+    } else {
+        idCounter += 1;
+        return idCounter;
+    }
+    return idCounter === 0 ? idCounter : idCounter += 1;
 }
 
 export {textCreator, imageCreator, buttonCreator, fieldCreator, idCounter, idCreator}

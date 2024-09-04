@@ -1,4 +1,5 @@
 import {textCreator, imageCreator, buttonCreator, fieldCreator, idCounter, idCreator} from "./tools.js";
+
 let currentUser;
 let project1;
 
@@ -97,7 +98,21 @@ const loadFromLocalStorage = function() {
 
 loadFromLocalStorage();
 
+const view = () => {
+    let stringyAppData = localStorage.appData;
+    let appData = JSON.parse(stringyAppData);
+    console.dir(appData);
+}
+
+const clear = function() {
+    localStorage.clear();
+    console.log(`%clocalStorage has been cleared`, `color: blue;`)
+}
+
 window.loadFromLocalStorage = loadFromLocalStorage;
+window.addTaskObject = addTaskObject;
+window.clear = clear;
+window.view = view;
 
 /* 
 1. See if there's appData to pull from
@@ -110,6 +125,7 @@ window.loadFromLocalStorage = loadFromLocalStorage;
     3. Add new task to tasks array
     4. Run STLS
 */ 
+
 
 
 export {User, Project, Task, currentUser, project1, addTaskObject, loadFromLocalStorage}

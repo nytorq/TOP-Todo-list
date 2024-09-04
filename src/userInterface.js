@@ -70,7 +70,8 @@ const renderUI = function() {
 
         // Creating new task in the UI
         const container = document.createElement('div');
-        container.classList.add('taskContainer');
+        let taskNumber = idCreator();
+        container.classList.add(`'taskContainer-${taskNumber}'`);
         const taskDetails = document.createElement('div');
         taskDetails.classList.add('taskDetails');
         taskDetailsCreator(taskDetails, taskData);
@@ -92,8 +93,6 @@ const renderUI = function() {
     }
     newTaskButton.addEventListener('click', createTask);
 };
-
-
 
 
 export {renderUI};
