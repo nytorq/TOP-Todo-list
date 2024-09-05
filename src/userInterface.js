@@ -1,5 +1,5 @@
 import {textCreator, imageCreator, buttonCreator, fieldCreator, idCounter, idCreator} from "./tools.js";
-import {User, Project, Task, currentUser, project1, addTaskObject} from "./logic.js"
+import {User, Project, Task, currentUser, project1, addTask} from "./logic.js"
 
 const body = document.querySelector('body');
 const header = textCreator('h1', 'Personal Projects');
@@ -35,7 +35,7 @@ const createTask = function(event) {
 
     // Creating new Task object and adding it to project
     console.log(taskDescription.value)
-    let taskData = addTaskObject(taskTitle.value, taskDescription.value, taskDueDate.value, taskPriority.value);
+    let taskData = addTask(taskTitle.value, taskDescription.value, taskDueDate.value, taskPriority.value);
 
     // Creating new task in the UI
     const container = document.createElement('div');

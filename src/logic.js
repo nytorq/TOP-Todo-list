@@ -30,7 +30,6 @@ class Task {
         this.priority = priority;
     }
     status = false;
-    id = idCreator();
 };
 
 const storageKey = 'appData';
@@ -55,7 +54,7 @@ const addProject = function(projectName) {
     saveToLocalStorage(parsedAppData)
 }
 
-const addTaskObject = function(project, title, description, date, priority) {
+const addTask = function(project, title, description, date, priority) {
     let taskObject = new Task(title, description, date, priority);
     let parsedAppData = loadFromLocalStorage();
     let matchedProject = parsedAppData.projects.filter((obj) => obj.name === project);
@@ -68,6 +67,15 @@ const addTaskObject = function(project, title, description, date, priority) {
     saveToLocalStorage(parsedAppData);
     console.log(`%cA new task has been added to ${matchedProject[0].name}:`, 'color: blue;');
     return taskObject;
+}
+
+const removeTask = function(project, taskID) {
+    let parsedAppData = loadFromLocalStorage();
+    let matchedProject = parsedAppData.projects.filter((obj) => obj.name === project);
+    let prunedTasks = matchedProject[0].tasks.filter((task, index) => index !== taskID);
+    matchedProject[0].tasks = prunedTasks;
+    saveToLocalStorage(parsedAppData);
+    console.log(`%cTask has been removed. The following task(s) remain: `, 'color: blue;', matchedProject[0].tasks);
 }
 
 // const updateLocalStorage = function(object) {
@@ -125,7 +133,8 @@ const createAppData = function() {
 
 
 window.loadFromLocalStorage = loadFromLocalStorage;
-window.addTaskObject = addTaskObject;
+window.addTask = addTask;
+window.removeTask = removeTask;
 window.addProject = addProject;
 window.createAppData = createAppData;
 
@@ -145,4 +154,4 @@ const testProject = new Project('testProject');
 testProject.addTask('testTask');
 window.testProject = testProject;
 
-export {Project, Task, addTaskObject, loadFromLocalStorage}
+export {Project, Task, addTask, loadFromLocalStorage}
