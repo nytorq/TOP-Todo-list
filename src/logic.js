@@ -56,11 +56,17 @@ const addProject = function(projectName) {
 }
 
 const addTaskObject = function(project, title, description, date, priority) {
-    let taskObject = new Task(project, title, description, date, priority);
-    let appData = loadFromLocalStorage();
-    appData.projects[0].tasks.push(taskObject);
-    saveToLocalStorage(appData);
-    console.log(localStorage.appData);
+    let taskObject = new Task(title, description, date, priority);
+    let parsedAppData = loadFromLocalStorage();
+    let matchedProject = parsedAppData.projects.filter((obj) => obj.name === project);
+    // appData.projects[0].tasks.push(taskObject);
+    // console.log('These are the matching projects: ', matchedProject[0])
+    // console.log('The matchedProject has an addTask method:', typeof matchedProject[0].addTask === 'function');
+    // console.log('This is parsedAppData before rewrite: ', parsedAppData)
+    matchedProject[0].tasks.push(taskObject);
+    // console.log('This is parsedAppData AFTER rewrite: ', parsedAppData)
+    saveToLocalStorage(parsedAppData);
+    console.log(`%cA new task has been added to ${matchedProject[0].name}:`, 'color: blue;');
     return taskObject;
 }
 
@@ -135,5 +141,8 @@ window.createAppData = createAppData;
     4. Run STLS
 */ 
 
+const testProject = new Project('testProject');
+testProject.addTask('testTask');
+window.testProject = testProject;
 
 export {Project, Task, addTaskObject, loadFromLocalStorage}
