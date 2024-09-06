@@ -2,17 +2,31 @@ import {textCreator, imageCreator, buttonCreator, fieldCreator, idCounter, idCre
 import {addTask, addProject, removeProject, loadFromLocalStorage} from "./logic.js"
 
 
-const createTask = function(event) {
-    event.preventDefault();
+const taskDetailsCreator = function(container, taskData) {
+    const taskTitleField = fieldCreator('input','Task', 'taskTitle');
+    container.appendChild(taskTitleField);
+    const taskDescField = fieldCreator('input','Description', 'taskDescription');
+    container.appendChild(taskDescField);
+    const taskDueDateField = fieldCreator('date','Due Date', 'taskDueDate');
+    container.appendChild(taskDueDateField);
+    const taskPriorityField = fieldCreator('select', 'Priority', 'taskPriority');
+    container.appendChild(taskPriorityField);
     
+    if (taskData) {
+        let input = taskTitleField.querySelector('input');
+        input.value = taskData.title;
+        input = taskDescField.querySelector('input');
+        input.value = taskData.desc;
+        input = taskDueDateField.querySelector('input');
+        input.value = taskData.dueDate;
+        input = taskPriorityField.querySelector('select');
+        input.value = taskData.priority;
+    }
+}
 
-    // Creating new Task object and adding it to project
-    console.log(taskDescription.value)
-    let taskData = addTask(taskTitle.value, taskDescription.value, taskDueDate.value, taskPriority.value);
-
-    // Creating new task in the UI
-    const container = document.createElement('div');
-    container.classList.add('taskContainer');
+const createTaskRow = function(taskData, container) {
+    const taskRow = document.createElement('div');
+    taskRow.classList.add('taskRow');
     const taskDetails = document.createElement('div');
     taskDetails.classList.add('taskDetails');
     taskDetailsCreator(taskDetails, taskData);
@@ -21,16 +35,37 @@ const createTask = function(event) {
     const moreButton = document.createElement('span');
     moreButton.classList.add('material-symbols-outlined');
     moreButton.innerText = "more_horiz";
-    container.appendChild(checkbox);
-    container.appendChild(taskDetails);
-    container.appendChild(moreButton);
-    tasks.appendChild(container);
-    // console.dir(currentUser.projects[0].tasks[0])
-    
-    // Clearing out inputs
+    taskRow.appendChild(checkbox);
+    taskRow.appendChild(taskDetails);
+    taskRow.appendChild(moreButton);
+    container.appendChild(taskRow);
+}
+
+const createTaskFromUI = function(event) {
+    event.preventDefault();
+    // Creating new Task object and adding it to project
+    let projectName = event.target.classList.value;
+    let form = document.querySelector(`form.${projectName}`)
+    let tasksContainer = document.querySelector(`.tasks-${projectName}`);
+    let taskTitle = form.querySelector(`#taskTitle-input-${projectName}`);
+    let taskDescription = form.querySelector(`#taskDescription-input-${projectName}`);
+    let taskDueDate = form.querySelector(`#taskDueDate-input-${projectName}`);
+    let taskPriority = form.querySelector(`#taskPriority-input-${projectName}`);
+    let taskData = addTask(projectName, taskTitle.value, taskDescription.value, taskDueDate.value, taskPriority.value);
+    // taskDetailsCreator(taskContainer, taskData);
     taskTitle.value = '';
     taskDescription.value = '';
     taskDueDate.value = '';
+    taskPriority.value = 'Low';
+
+    // // Creating new task in the UI
+    createTaskRow(taskData, tasksContainer);
+    
+    
+    // // Clearing out inputs
+    // taskTitle.value = '';
+    // taskDescription.value = '';
+    // taskDueDate.value = '';
 }
 
 const addProjectFromUI = function() {
@@ -39,19 +74,6 @@ const addProjectFromUI = function() {
         addProject(projectName.value);
         createTaskBoard(projectName.value)
         projectName.value = '';
-    }
-}
-
-const clearUI = function() {
-    let body = document.querySelector('body');
-    body.innerHTML = '';
-}
-
-const removeProjectFromUI = function(project) {
-    if (confirm(`Are you sure you want to delete this project, "${project}"?`)) {
-        removeProject(project);
-        clearUI();
-        renderUI();
     }
 }
 
@@ -77,22 +99,19 @@ const createTaskBoard = function(projectName) {
     taskBoard.appendChild(tasks)
     // Creating task board's task form
     let newTaskForm = document.createElement('form');
-    const taskTitleField = fieldCreator('input','Task', 'taskTitle-input');
-    taskTitleField.classList.add(`${projectWithNoSpaces}`);
+    newTaskForm.classList.add(projectName);
+    const taskTitleField = fieldCreator('input','Task', `taskTitle-input-${projectWithNoSpaces}`);
     newTaskForm.appendChild(taskTitleField);
-    const taskDescField = fieldCreator('input','Description', 'taskDescription-input');
-    taskDescField.classList.add(`${projectWithNoSpaces}`);
+    const taskDescField = fieldCreator('input','Description', `taskDescription-input-${projectWithNoSpaces}`);
     newTaskForm.appendChild(taskDescField);
-    const taskDueDateField = fieldCreator('date','Due Date', 'taskDueDate-input');
-    taskDueDateField.classList.add(`${projectWithNoSpaces}`);
+    const taskDueDateField = fieldCreator('date','Due Date', `taskDueDate-input-${projectWithNoSpaces}`);
     newTaskForm.appendChild(taskDueDateField);
-    const taskPriorityField = fieldCreator('select', 'Priority', 'taskPriority-input');
-    taskPriorityField.classList.add(`${projectWithNoSpaces}`);
+    const taskPriorityField = fieldCreator('select', 'Priority', `taskPriority-input-${projectWithNoSpaces}`);
     newTaskForm.appendChild(taskPriorityField);
-    const newTaskButton = buttonCreator('Create Task')
+    const newTaskButton = buttonCreator('Create Task', `${projectWithNoSpaces}`)
     newTaskButton.classList.add(`${projectWithNoSpaces}`);
     newTaskForm.appendChild(newTaskButton);
-    newTaskButton.addEventListener('click', createTask);
+    newTaskButton.addEventListener('click', createTaskFromUI);
     taskBoard.appendChild(newTaskForm)
 }
 
@@ -111,37 +130,26 @@ const renderUI = function() {
     let parsedAppData = loadFromLocalStorage();
     for (let i = 0 ; i < parsedAppData.projects.length ; i++) {
         createTaskBoard(parsedAppData.projects[i].name);
+        let taskContainer = document.querySelector(`.tasks-${parsedAppData.projects[i].name}`);
+        for (let j = 0 ; j < parsedAppData.projects[i].tasks.length ; j++) {
+            createTaskRow(parsedAppData.projects[i].tasks[i],taskContainer);
+        }
     }
 }
 
 renderUI();
 
-const taskDetailsCreator = function(container, taskData) {
-    const taskTitleField = fieldCreator('input','Task', 'taskTitle');
-    container.appendChild(taskTitleField);
-    const taskDescField = fieldCreator('input','Description', 'taskDescription');
-    container.appendChild(taskDescField);
-    const taskDueDateField = fieldCreator('date','Due Date', 'taskDueDate');
-    container.appendChild(taskDueDateField);
-    const taskPriorityField = fieldCreator('select', 'Priority', 'taskPriority');
-    container.appendChild(taskPriorityField);
-    
-    if (taskData) {
-        let input = taskTitleField.querySelector('input');
-        input.value = taskData.title;
-        input = taskDescField.querySelector('input');
-        input.value = taskData.desc;
-        input = taskDueDateField.querySelector('input');
-        input.value = taskData.dueDate;
-        input = taskPriorityField.querySelector('select');
-        input.value = taskData.priority;
-    }
+const clearUI = function() {
+    let body = document.querySelector('body');
+    body.innerHTML = '';
 }
 
-
-// let taskTitle = document.getElementById('taskTitle-main');
-// let taskDescription = document.getElementById('taskDescription-main');
-// let taskDueDate = document.getElementById('taskDueDate-main');
-// let taskPriority = document.getElementById('taskPriority-main');
+const removeProjectFromUI = function(project) {
+    if (confirm(`Are you sure you want to delete this project, "${project}"?`)) {
+        removeProject(project);
+        clearUI();
+        renderUI();
+    }
+}
 
 export {};

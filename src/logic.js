@@ -50,7 +50,7 @@ const addTask = function(project, title, description, date, priority) {
     let matchedProject = parsedAppData.projects.filter((obj) => obj.name === project);
     matchedProject[0].tasks.push(taskObject);
     saveToLocalStorage(parsedAppData);
-    console.log(`%cA new task has been added to the project "${matchedProject[0].name}":`, 'color: blue;');
+    console.log(`%cA new task has been added to the project "${matchedProject[0].name}":`, 'color: blue;', taskObject);
     return taskObject;
 }
 
