@@ -78,6 +78,15 @@ const removeTask = function(project, taskID) {
     console.log(`%cTask has been removed. The following task(s) remain: `, 'color: blue;', matchedProject[0].tasks);
 }
 
+const editTask = function(project, taskID, taskProperty, value) {
+    let parsedAppData = loadFromLocalStorage();
+    let matchedProject = parsedAppData.projects.filter((obj) => obj.name === project);
+    let targetTask = matchedProject[0].tasks.filter((task, index) => index === taskID);
+    targetTask[0][taskProperty] = value;
+    saveToLocalStorage(parsedAppData);
+    console.log(`%c${project}'s task #${taskID} property, "${taskProperty}" has been changed to: `, 'color: blue;', targetTask[0]);
+}
+
 // const updateLocalStorage = function(object) {
 //     const JSONString = JSON.stringify(object);
 //     localStorage.setItem('currentUser', JSONString);
@@ -131,10 +140,10 @@ const createAppData = function() {
     return blankObject;
 }
 
-
 window.loadFromLocalStorage = loadFromLocalStorage;
 window.addTask = addTask;
 window.removeTask = removeTask;
+window.editTask = editTask;
 window.addProject = addProject;
 window.createAppData = createAppData;
 
