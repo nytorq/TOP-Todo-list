@@ -74,4 +74,9 @@ const idCreator = () => {
     return idCounter === 0 ? idCounter : idCounter += 1;
 }
 
-export {textCreator, imageCreator, buttonCreator, fieldCreator, idCounter, idCreator}
+const spaceCharRemover = function(string) {
+    let result = string.replace(/\s+/g, '');
+    return result;
+}
+
+export {textCreator, imageCreator, buttonCreator, fieldCreator, idCounter, idCreator, spaceCharRemover}

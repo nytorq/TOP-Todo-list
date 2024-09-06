@@ -32,6 +32,16 @@ button {
     margin: var(--br-1) 0;
 }
 
+.newProjectButton {
+    background-color: var(--color-sec);
+    border-radius: var(--br-1);
+    border: none;
+    color: black;
+    padding: 12px 0;
+    font-size: 1rem;
+    margin: var(--br-1) 0;
+}
+
 input, select {
     background-color: transparent;
     border: 1px solid var(--color-sec);
@@ -49,7 +59,7 @@ label {
     flex-direction: column;
 }
 
-.tasklist {
+.taskBoard {
     background-color: white;
     border: 1px solid var(--color-pri);
     padding: 16px;

@@ -28,12 +28,12 @@ const storageKey = 'appData';
 const addProject = function(projectName) {
     let newProject = new Project(projectName);
     let parsedAppData = loadFromLocalStorage();
-    console.log('parsedAppData is ' + parsedAppData);
-    if (!parsedAppData.projects) {
-        parsedAppData.projects = [];
-    }
+    // if (!parsedAppData.projects) {
+    //     parsedAppData.projects = [];
+    // }
     parsedAppData.projects.push(newProject);
     saveToLocalStorage(parsedAppData)
+    console.log(`%cYour project, "${projectName}", has been added.`, 'color: blue;', loadFromLocalStorage())
 }
 
 const addTask = function(project, title, description, date, priority) {
@@ -104,4 +104,4 @@ if (!localStorage.appData) {
     addProject('Personal');
 }
 
-export {Project, Task, addTask, loadFromLocalStorage}
+export {Project, Task, addProject, addTask, removeTask, editTask, loadFromLocalStorage}
