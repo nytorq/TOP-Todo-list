@@ -30,6 +30,7 @@ button {
     font-size: 1rem;
     width: 100%;
     margin: var(--br-1) 0;
+    cursor: pointer;
 }
 
 .newProjectButton {
@@ -40,6 +41,12 @@ button {
     padding: 12px 0;
     font-size: 1rem;
     margin: var(--br-1) 0;
+}
+
+.removeProject {
+    position: absolute;
+    right: var(--br-1);
+    top: var(--br-1);
 }
 
 input, select {
@@ -65,6 +72,8 @@ label {
     padding: 16px;
     border-radius: var(--br-1);
     box-shadow: 0px 5px 9px 0px #00000033;
+    margin-bottom: 2rem;
+    position: relative;
 }
 
 h1 {

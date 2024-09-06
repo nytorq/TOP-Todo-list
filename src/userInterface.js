@@ -1,5 +1,5 @@
 import {textCreator, imageCreator, buttonCreator, fieldCreator, idCounter, idCreator, spaceCharRemover} from "./tools.js";
-import {addTask, addProject, loadFromLocalStorage} from "./logic.js"
+import {addTask, addProject, removeProject, loadFromLocalStorage} from "./logic.js"
 
 
 const createTask = function(event) {
@@ -33,21 +33,49 @@ const createTask = function(event) {
     taskDueDate.value = '';
 }
 
+const addProjectFromUI = function() {
+    let projectName = document.getElementById('projectName');
+    if (projectName.value) {
+        addProject(projectName.value);
+        createTaskBoard(projectName.value)
+        projectName.value = '';
+    }
+}
+
+const clearUI = function() {
+    let body = document.querySelector('body');
+    body.innerHTML = '';
+}
+
+const removeProjectFromUI = function(project) {
+    if (confirm(`Are you sure you want to delete this project, "${project}"?`)) {
+        removeProject(project);
+        clearUI();
+        renderUI();
+    }
+}
+
 const createTaskBoard = function(projectName) {
     let body = document.querySelector('body');
     let projectWithNoSpaces = spaceCharRemover(projectName);
 
-    // Creating the task board and its header and tasks container
+    // Creating the task board 
     const taskBoard = document.createElement('div');
     taskBoard.classList.add('taskBoard', `${projectWithNoSpaces}`);
     body.appendChild(taskBoard);
     let taskBoardHeader = textCreator('h2', projectName);
     taskBoard.appendChild(taskBoardHeader);
+    // Creating the task board's icon button for removing projects
+    const iconButton = document.createElement('span');
+    iconButton.innerText = 'close';
+    iconButton.classList.add('material-symbols-outlined', 'removeProject', projectName);
+    taskBoard.appendChild(iconButton);
+    iconButton.addEventListener('click', ()=> removeProjectFromUI(projectName))
+    // Creating the task board's container for showcasing tasks
     let tasks = document.createElement('div');
     tasks.classList.add(`tasks-${projectWithNoSpaces}`)
     taskBoard.appendChild(tasks)
-
-    // Creating taskBoard's task form
+    // Creating task board's task form
     let newTaskForm = document.createElement('form');
     const taskTitleField = fieldCreator('input','Task', 'taskTitle-input');
     taskTitleField.classList.add(`${projectWithNoSpaces}`);
@@ -66,8 +94,6 @@ const createTaskBoard = function(projectName) {
     newTaskForm.appendChild(newTaskButton);
     newTaskButton.addEventListener('click', createTask);
     taskBoard.appendChild(newTaskForm)
-    let parsedAppData = loadFromLocalStorage();
-    
 }
 
 const renderUI = function() {
@@ -79,14 +105,6 @@ const renderUI = function() {
     const projectNameInput = fieldCreator('text', 'Project Name', 'projectName');
     body.appendChild(projectNameInput);
     body.appendChild(newProjectButton);
-    const addProjectFromUI = function() {
-        let projectName = document.getElementById('projectName');
-        if (projectName.value) {
-            addProject(projectName.value);
-            createTaskBoard(projectName.value)
-            projectName.value = '';
-        }
-    }
     newProjectButton.addEventListener('click', addProjectFromUI);
 
     // Creating task boards for each project

@@ -36,6 +36,14 @@ const addProject = function(projectName) {
     console.log(`%cYour project, "${projectName}", has been added.`, 'color: blue;', loadFromLocalStorage())
 }
 
+const removeProject = function(projectName) {
+    let parsedAppData = loadFromLocalStorage();
+    let projectRemoved = parsedAppData.projects.filter((project) => projectName !== project.name )
+    parsedAppData.projects = projectRemoved;
+    saveToLocalStorage(parsedAppData);
+    console.log(`%cThe project ${projectName} has been removed.`, 'color: red;');
+}
+
 const addTask = function(project, title, description, date, priority) {
     let taskObject = new Task(title, description, date, priority);
     let parsedAppData = loadFromLocalStorage();
@@ -52,7 +60,7 @@ const removeTask = function(project, taskID) {
     let prunedTasks = matchedProject[0].tasks.filter((task, index) => index !== taskID);
     matchedProject[0].tasks = prunedTasks;
     saveToLocalStorage(parsedAppData);
-    console.log(`%cTask has been removed. The following task(s) remain: `, 'color: blue;', matchedProject[0].tasks);
+    console.log(`%cTask has been removed. The following task(s) remain: `, 'color: red;', matchedProject[0].tasks);
 }
 
 const editTask = function(project, taskID, taskProperty, value) {
@@ -97,11 +105,13 @@ window.addTask = addTask;
 window.removeTask = removeTask;
 window.editTask = editTask;
 window.addProject = addProject;
+window.removeProject = removeProject;
 window.createAppData = createAppData;
+
 
 if (!localStorage.appData) {
     createAppData();
     addProject('Personal');
 }
 
-export {Project, Task, addProject, addTask, removeTask, editTask, loadFromLocalStorage}
+export {Project, Task, addProject, removeProject, addTask, removeTask, editTask, loadFromLocalStorage}
