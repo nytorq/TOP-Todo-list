@@ -61,17 +61,8 @@ const fieldCreator = (type, labelText, connection, className) => {
     return div;
 }
 
-let idCounter = 0;
-
-const idCreator = () => {
-    if (idCounter === 0) {
-        idCounter += 1;
-        return 0;
-    } else {
-        idCounter += 1;
-        return idCounter;
-    }
-    return idCounter === 0 ? idCounter : idCounter += 1;
+function generateID(type) {
+    return `${type}-` + Date.now() + '-' + Math.floor(Math.random()*1000);
 }
 
 const spaceCharRemover = function(string) {
@@ -79,4 +70,4 @@ const spaceCharRemover = function(string) {
     return result;
 }
 
-export {textCreator, imageCreator, buttonCreator, fieldCreator, idCounter, idCreator, spaceCharRemover}
+export {textCreator, imageCreator, buttonCreator, fieldCreator, spaceCharRemover, generateID}

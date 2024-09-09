@@ -1,6 +1,9 @@
+import { generateID } from "./tools.js";
+
 class Project {
     constructor(name) {
         this.name = name;
+        this.id = generateID('proj')
     }
     tasks = [];
     addTask(task) {
@@ -10,6 +13,7 @@ class Project {
 class Task {
     static validPriorities = ["Low", "Medium", "High"];
     constructor(title, description, date, priority = 'Medium') {
+        this.id = generateID('task');
         this.title = title;
         this.desc = description;
         this.dueDate = date
@@ -34,6 +38,7 @@ const addProject = function(projectName) {
     parsedAppData.projects.push(newProject);
     saveToLocalStorage(parsedAppData)
     console.log(`%cYour project, "${projectName}", has been added.`, 'color: blue;', loadFromLocalStorage())
+    return newProject;
 }
 
 const removeProject = function(projectName) {
@@ -57,7 +62,7 @@ const addTask = function(project, title, description, date, priority) {
 const removeTask = function(project, taskID) {
     let parsedAppData = loadFromLocalStorage();
     let matchedProject = parsedAppData.projects.filter((obj) => obj.name === project);
-    let prunedTasks = matchedProject[0].tasks.filter((task, index) => index !== taskID);
+    let prunedTasks = matchedProject[0].tasks.filter((task) => task.id !== taskID);
     matchedProject[0].tasks = prunedTasks;
     saveToLocalStorage(parsedAppData);
     console.log(`%cTask has been removed. The following task(s) remain: `, 'color: red;', matchedProject[0].tasks);

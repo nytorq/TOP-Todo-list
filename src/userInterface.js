@@ -1,4 +1,4 @@
-import {textCreator, imageCreator, buttonCreator, fieldCreator, idCounter, idCreator, spaceCharRemover} from "./tools.js";
+import {textCreator, imageCreator, buttonCreator, fieldCreator, generateID, spaceCharRemover} from "./tools.js";
 import {addTask, addProject, removeProject, loadFromLocalStorage} from "./logic.js"
 
 
@@ -27,14 +27,15 @@ const taskDetailsCreator = function(container, taskData) {
 const createTaskRow = function(taskData, container) {
     const taskRow = document.createElement('div');
     taskRow.classList.add('taskRow');
+    taskRow.setAttribute('data-task-id', taskData.id);
     const taskDetails = document.createElement('div');
     taskDetails.classList.add('taskDetails');
     taskDetailsCreator(taskDetails, taskData);
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     const moreButton = document.createElement('span');
-    moreButton.classList.add('material-symbols-outlined');
-    moreButton.innerText = "more_horiz";
+    moreButton.classList.add('material-symbols-outlined', 'removeTask');
+    moreButton.innerText = "delete";
     taskRow.appendChild(checkbox);
     taskRow.appendChild(taskDetails);
     taskRow.appendChild(moreButton);
@@ -71,26 +72,27 @@ const createTaskFromUI = function(event) {
 const addProjectFromUI = function() {
     let projectName = document.getElementById('projectName');
     if (projectName.value) {
-        addProject(projectName.value);
-        createTaskBoard(projectName.value)
+        let newProject = addProject(projectName.value);
+        createTaskBoard(projectName.value, newProject.id)
         projectName.value = '';
     }
 }
 
-const createTaskBoard = function(projectName) {
+const createTaskBoard = function(projectName, projectID) {
     let body = document.querySelector('body');
     let projectWithNoSpaces = spaceCharRemover(projectName);
 
     // Creating the task board 
     const taskBoard = document.createElement('div');
     taskBoard.classList.add('taskBoard', `${projectWithNoSpaces}`);
+    taskBoard.setAttribute('data-proj-id', projectID)
     body.appendChild(taskBoard);
     let taskBoardHeader = textCreator('h2', projectName);
     taskBoard.appendChild(taskBoardHeader);
     // Creating the task board's icon button for removing projects
     const iconButton = document.createElement('span');
     iconButton.innerText = 'close';
-    iconButton.classList.add('material-symbols-outlined', 'removeProject', projectName);
+    iconButton.classList.add('material-symbols-outlined', 'removeProject', `${projectWithNoSpaces}`);
     taskBoard.appendChild(iconButton);
     iconButton.addEventListener('click', ()=> removeProjectFromUI(projectName))
     // Creating the task board's container for showcasing tasks
@@ -99,7 +101,7 @@ const createTaskBoard = function(projectName) {
     taskBoard.appendChild(tasks)
     // Creating task board's task form
     let newTaskForm = document.createElement('form');
-    newTaskForm.classList.add(projectName);
+    newTaskForm.classList.add(`${projectWithNoSpaces}`);
     const taskTitleField = fieldCreator('input','Task', `taskTitle-input-${projectWithNoSpaces}`);
     newTaskForm.appendChild(taskTitleField);
     const taskDescField = fieldCreator('input','Description', `taskDescription-input-${projectWithNoSpaces}`);
@@ -129,10 +131,10 @@ const renderUI = function() {
     // Creating task boards for each project
     let parsedAppData = loadFromLocalStorage();
     for (let i = 0 ; i < parsedAppData.projects.length ; i++) {
-        createTaskBoard(parsedAppData.projects[i].name);
+        createTaskBoard(parsedAppData.projects[i].name, parsedAppData.projects[i].id);
         let taskContainer = document.querySelector(`.tasks-${parsedAppData.projects[i].name}`);
         for (let j = 0 ; j < parsedAppData.projects[i].tasks.length ; j++) {
-            createTaskRow(parsedAppData.projects[i].tasks[i],taskContainer);
+            createTaskRow(parsedAppData.projects[i].tasks[j],taskContainer);
         }
     }
 }
@@ -151,5 +153,30 @@ const removeProjectFromUI = function(project) {
         renderUI();
     }
 }
+function addGlobalEventListener(type, selector, callback) {
+    document.addEventListener(type, e => {
+        if (e.target.matches(selector)) {
+            callback(e);
+        }
+    })
+}
+
+const removeTaskFromUI = function() {
+    let taskID = event.target.parentElement.dataset.taskId;
+    if (confirm(`Are you sure you want to delete this task, "${taskID}"?`)) {
+        let taskRow = document.querySelector(`[data-task-id="${taskID}"]`)
+        // let taskBoard = event.target.closest('.taskBoard');
+        // console.log(taskBoard);
+        let projectName = taskRow.closest('.taskBoard').classList[1]
+        removeTask(projectName, taskID);
+        taskRow.remove();
+        clearUI();
+        renderUI();
+    }
+    // console.log(event)
+    // console.log(event.target.parentElement.dataset.taskId);
+    // console.log(event.target.parentElement.parentElement.parentElement.dataset.projId);
+}
+addGlobalEventListener('click', '.removeTask', removeTaskFromUI)
 
 export {};
