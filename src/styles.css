@@ -124,11 +124,25 @@ label[for^="task-"] {
     width: 100%;
     padding: calc(var(--br-1)*2);
 }
+/* 
+    Styles to make form elements for tasks go hidden
 
-.hidden {
+
+div.hidden > .field:nth-child(n+2) {
+    display: none;
+} 
+
+div.hidden > .field:first-child label {
     display: none;
 }
 
-/* .taskContainer > input[type="checkbox"] {
+div.hidden > .field:first-child input {
+    border: none;
+    padding-left: 0px;
+}
 
-} */
+.hidden + span {
+    display: none;
+}
+
+*/

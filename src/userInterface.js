@@ -33,12 +33,16 @@ const createTaskRow = function(taskData, container) {
     taskDetailsCreator(taskDetails, taskData);
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
-    const moreButton = document.createElement('span');
-    moreButton.classList.add('material-symbols-outlined', 'removeTask');
-    moreButton.innerText = "delete";
+    const deleteButton = document.createElement('span');
+    deleteButton.classList.add('material-symbols-outlined', 'removeTask');
+    deleteButton.innerText = "delete";
+    const saveButton = document.createElement('span');
+    saveButton.classList.add('material-symbols-outlined', 'saveTask');
+    saveButton.innerText = "save";
     taskRow.appendChild(checkbox);
     taskRow.appendChild(taskDetails);
-    taskRow.appendChild(moreButton);
+    taskRow.appendChild(deleteButton);
+    taskRow.appendChild(saveButton);
     container.appendChild(taskRow);
 }
 
@@ -46,13 +50,14 @@ const createTaskFromUI = function(event) {
     event.preventDefault();
     // Creating new Task object and adding it to project
     let projectName = event.target.classList.value;
+    let projectID = event.target.closest('.taskBoard').getAttribute('data-proj-id');
     let form = document.querySelector(`form.${projectName}`)
     let tasksContainer = document.querySelector(`.tasks-${projectName}`);
     let taskTitle = form.querySelector(`#taskTitle-input-${projectName}`);
     let taskDescription = form.querySelector(`#taskDescription-input-${projectName}`);
     let taskDueDate = form.querySelector(`#taskDueDate-input-${projectName}`);
     let taskPriority = form.querySelector(`#taskPriority-input-${projectName}`);
-    let taskData = addTask(projectName, taskTitle.value, taskDescription.value, taskDueDate.value, taskPriority.value);
+    let taskData = addTask(projectID, taskTitle.value, taskDescription.value, taskDueDate.value, taskPriority.value);
     // taskDetailsCreator(taskContainer, taskData);
     taskTitle.value = '';
     taskDescription.value = '';
@@ -165,18 +170,32 @@ const removeTaskFromUI = function() {
     let taskID = event.target.parentElement.dataset.taskId;
     if (confirm(`Are you sure you want to delete this task, "${taskID}"?`)) {
         let taskRow = document.querySelector(`[data-task-id="${taskID}"]`)
-        // let taskBoard = event.target.closest('.taskBoard');
-        // console.log(taskBoard);
-        let projectName = taskRow.closest('.taskBoard').classList[1]
+        let projectName = taskRow.closest('.taskBoard').getAttribute('data-proj-id');
         removeTask(projectName, taskID);
         taskRow.remove();
         clearUI();
         renderUI();
     }
-    // console.log(event)
-    // console.log(event.target.parentElement.dataset.taskId);
-    // console.log(event.target.parentElement.parentElement.parentElement.dataset.projId);
 }
+
+const editTaskFromUI = function() {
+    let taskRow = event.target.closest('.taskRow');
+    let projectName = event.target.closest('.taskBoard').classList[1];
+    let projectID = event.target.closest('.taskBoard').getAttribute('data-proj-id');;
+    let taskID = taskRow.getAttribute('data-task-id');
+    let taskStatus = taskRow.querySelector('input[type="checkbox"]').checked;
+    let taskTitle = taskRow.querySelector('#taskTitle').value;
+    let taskDescription = taskRow.querySelector('#taskDescription').value;
+    let taskDueDate = taskRow.querySelector('#taskDueDate').value;
+    let taskPriority = taskRow.querySelector('#taskPriority').value;
+    editTask(projectID, taskID, 'status', taskStatus)
+    editTask(projectID, taskID, 'title', taskTitle)
+    editTask(projectID, taskID, 'desc', taskDescription)
+    editTask(projectID, taskID, 'dueDate', taskDueDate)
+    editTask(projectID, taskID, 'priority', taskPriority)
+}
+
 addGlobalEventListener('click', '.removeTask', removeTaskFromUI)
+addGlobalEventListener('click', '.saveTask', editTaskFromUI)
 
 export {};

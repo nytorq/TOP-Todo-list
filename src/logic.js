@@ -49,32 +49,32 @@ const removeProject = function(projectName) {
     console.log(`%cThe project ${projectName} has been removed.`, 'color: red;');
 }
 
-const addTask = function(project, title, description, date, priority) {
+const addTask = function(projectID, title, description, date, priority) {
     let taskObject = new Task(title, description, date, priority);
     let parsedAppData = loadFromLocalStorage();
-    let matchedProject = parsedAppData.projects.filter((obj) => obj.name === project);
+    let matchedProject = parsedAppData.projects.filter((proj) => proj.id === projectID);
     matchedProject[0].tasks.push(taskObject);
     saveToLocalStorage(parsedAppData);
     console.log(`%cA new task has been added to the project "${matchedProject[0].name}":`, 'color: blue;', taskObject);
     return taskObject;
 }
 
-const removeTask = function(project, taskID) {
+const removeTask = function(projectID, taskID) {
     let parsedAppData = loadFromLocalStorage();
-    let matchedProject = parsedAppData.projects.filter((obj) => obj.name === project);
+    let matchedProject = parsedAppData.projects.filter((proj) => proj.id === projectID);
     let prunedTasks = matchedProject[0].tasks.filter((task) => task.id !== taskID);
     matchedProject[0].tasks = prunedTasks;
     saveToLocalStorage(parsedAppData);
     console.log(`%cTask has been removed. The following task(s) remain: `, 'color: red;', matchedProject[0].tasks);
 }
 
-const editTask = function(project, taskID, taskProperty, value) {
+const editTask = function(projectID, taskID, taskProperty, value) {
     let parsedAppData = loadFromLocalStorage();
-    let matchedProject = parsedAppData.projects.filter((obj) => obj.name === project);
-    let targetTask = matchedProject[0].tasks.filter((task, index) => index === taskID);
+    let matchedProject = parsedAppData.projects.filter((proj) => proj.id === projectID);
+    let targetTask = matchedProject[0].tasks.filter((task) => task.id === taskID);
     targetTask[0][taskProperty] = value;
     saveToLocalStorage(parsedAppData);
-    console.log(`%c${project}'s task #${taskID} property, "${taskProperty}" has been changed to: `, 'color: blue;', targetTask[0]);
+    console.log(`%c${projectID}'s task #${taskID} property, "${taskProperty}" has been changed to: `, 'color: blue;', targetTask[0]);
 }
 
 const saveToLocalStorage = function(object) {
