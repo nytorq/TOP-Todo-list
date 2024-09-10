@@ -33,6 +33,11 @@ const createTaskRow = function(taskData, container) {
     taskDetailsCreator(taskDetails, taskData);
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
+    if (taskData.status) {
+        checkbox.checked = true;
+    } else if (taskData.status) {
+        checkbox.checked = false;
+    }
     const deleteButton = document.createElement('span');
     deleteButton.classList.add('material-symbols-outlined', 'removeTask');
     deleteButton.innerText = "delete";
@@ -138,6 +143,7 @@ const renderUI = function() {
     for (let i = 0 ; i < parsedAppData.projects.length ; i++) {
         createTaskBoard(parsedAppData.projects[i].name, parsedAppData.projects[i].id);
         let taskContainer = document.querySelector(`.tasks-${parsedAppData.projects[i].name}`);
+        // let taskContainer = document.querySelector(`.tasksContainer`);
         for (let j = 0 ; j < parsedAppData.projects[i].tasks.length ; j++) {
             createTaskRow(parsedAppData.projects[i].tasks[j],taskContainer);
         }
